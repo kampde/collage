@@ -7,7 +7,7 @@ from glob import glob
 from decimal import Decimal
 import os
 import sys
-import Image
+from PIL import Image
 
 MM_PER_INCH = Decimal("25.4")
 
