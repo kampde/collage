@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for i in ??.jpg
+do
+	w=$(exiftool -imageWidth $i | tail -n 1 | cut -d: -f2)
+	h=$(exiftool -imageheight $i | tail -n 1 | cut -d: -f2 )
+	mp=$(($w * $h))
+	if [ "$w" -gt "$h" ]
+	then
+		align="H"
+	else
+		align="V"
+	fi
+	printf "%s % 10s % 5s % 5s %s\n" $i $mp $w $h $align
+done

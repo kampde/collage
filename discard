@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for param
+do
+	if echo "$param" | grep -q discard
+	then
+		echo "$param already discarded"
+	else
+		echo mv "$param" "$param.discard"
+	fi
+done
