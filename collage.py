@@ -36,48 +36,55 @@ def collage(
     vspace = DEFAULT_VSPACE,
     verbose = False
 ):
-    canvas_width = int(width / MM_PER_INCH * resolution)
-    canvas_height = int(height / MM_PER_INCH * resolution)
-    cell_width = (canvas_width - padding * 2 - ((columns - 1) * hspace)) / columns
-    cell_height = (canvas_height - padding * 2 - ((rows - 1) * vspace)) / rows
+    # Convert all units from mm to pixels
+    pixels = lambda mm: int(mm / MM_PER_INCH * resolution)
+    width_px = pixels(width)
+    height_px = pixels(height)
+    hspace_px = pixels(hspace)
+    vspace_px = pixels(vspace)
+    padding_px = pixels(padding)
 
-    canvas = Image.new(
-        mode,
-        (canvas_width, canvas_height)
-    )
+    # Calculate cell size
+    cell_width_px = (width_px - padding_px * 2 - (columns - 1) * hspace_px) / columns
+    cell_height_px = (height_px - padding_px * 2 - (rows - 1) * vspace_px) / rows
 
+    # Create an empty canvas
+    canvas = Image.new(mode, (width_px, height_px))
+
+    # Load and resize the source images
     images = []
     for image_file in image_files:
         if verbose:
-            print "Redimensionant %s a %dx%d" % (image_file, cell_width, cell_height)
+            print "Redimensionant %s a %dx%d" % (
+                image_file,
+                cell_width_px,
+                cell_height_px
+            )
         thumb = thumbnail(
             image_file,
-            cell_width,
-            cell_height,
+            cell_width_px,
+            cell_height_px,
             mode = mode
         )
         images.append(thumb)
 
+    # Compose the grid
     if verbose:
         print "Enganxant imatges"
 
     i = 0
-    nrow = 0
-    ncol = 0
 
     for row in xrange(rows):
-        ncol = 0
         for column in xrange(columns):
             image = images[i % len(images)]
-            x = cell_width * column + padding + (ncol * hspace)
-            y = cell_height * row + padding + (nrow * vspace)
+            x = cell_width_px * column + padding_px + (column * hspace_px)
+            y = cell_height_px * row + padding_px + (row * vspace_px)
             if verbose:
                 print "Enganxant a (%d, %d)" % (x, y)
-            canvas.paste(image, (x, y, ))
+            canvas.paste(image, (x, y))
             i += 1
-            ncol += 1
-        nrow += 1
 
+    # Save the resulting image
     if verbose:
         print "Desant", output_file
 
