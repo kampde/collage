@@ -49,6 +49,9 @@ def collage(
     cell_width_px = (width_px - padding_px * 2 - (columns - 1) * hspace_px) / columns
     cell_height_px = (height_px - padding_px * 2 - (rows - 1) * vspace_px) / rows
 
+    if verbose:
+        print "Mida de les cel·les: %d x %d" % (cell_width_px, cell_height_px)
+
     # Create an empty canvas
     canvas = Image.new(mode, (width_px, height_px))
 
@@ -56,11 +59,7 @@ def collage(
     images = []
     for image_file in image_files:
         if verbose:
-            print "Redimensionant %s a %dx%d" % (
-                image_file,
-                cell_width_px,
-                cell_height_px
-            )
+            print "Redimensionant %s" % image_file
         thumb = thumbnail(
             image_file,
             cell_width_px,
