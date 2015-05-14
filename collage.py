@@ -18,6 +18,9 @@ DEFAULT_RESOLUTION = 200
 DEFAULT_COLUMNS = 12
 DEFAULT_ROWS = 6
 DEFAULT_MODE = "CMYK"
+DEFAULT_PADDING = 0
+DEFAULT_HSPACE = 0
+DEFAULT_VSPACE = 0
 
 def collage(
     image_files,
@@ -28,12 +31,15 @@ def collage(
     mode = DEFAULT_MODE,
     columns = DEFAULT_COLUMNS,
     rows = DEFAULT_ROWS,
+    padding = DEFAULT_PADDING,
+    hspace = DEFAULT_HSPACE,
+    vspace = DEFAULT_VSPACE,
     verbose = False
 ):
     canvas_width = int(width / MM_PER_INCH * resolution)
     canvas_height = int(height / MM_PER_INCH * resolution)
-    cell_width = canvas_width / columns
-    cell_height = canvas_height / rows
+    cell_width = (canvas_width - padding * 2 - ((columns - 1) * hspace)) / columns
+    cell_height = (canvas_height - padding * 2 - ((rows - 1) * vspace)) / rows
 
     canvas = Image.new(
         mode,
@@ -56,14 +62,21 @@ def collage(
         print "Enganxant imatges"
 
     i = 0
+    nrow = 0
+    ncol = 0
 
     for row in xrange(rows):
+        ncol = 0
         for column in xrange(columns):
             image = images[i % len(images)]
-            x = cell_width * column
-            y = cell_height * row
+            x = cell_width * column + padding + (ncol * hspace)
+            y = cell_height * row + padding + (nrow * vspace)
+            if verbose:
+                print "Enganxant a (%d, %d)" % (x, y)
             canvas.paste(image, (x, y, ))
             i += 1
+            ncol += 1
+        nrow += 1
 
     if verbose:
         print "Desant", output_file
@@ -213,6 +226,21 @@ def main():
         help = u"Fitxer on es desarà la imatge final."
     )
 
+    parser.add_argument(
+        "--padding", type = int, default = DEFAULT_PADDING,
+        help = u"Marge de la imatge (en mm)."
+    )
+
+    parser.add_argument(
+        "--hspace", type = int, default = DEFAULT_HSPACE,
+        help = u"Espaiat horitzontal entre imatges (en mm)."
+    )
+
+    parser.add_argument(
+        "--vspace", type = int, default = DEFAULT_VSPACE,
+        help = u"Espaiat vertical entre imatges (en mm)."
+    )
+
     args = parser.parse_args()
 
     image_files = []
@@ -232,6 +260,9 @@ def main():
         mode = args.mode,
         columns = args.columns,
         rows = args.rows,
+        padding = args.padding,
+        hspace = args.hspace,
+        vspace = args.vspace,
         verbose = args.verbose
     )
 
