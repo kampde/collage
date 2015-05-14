@@ -62,21 +62,16 @@ def collage(
         print "Enganxant imatges"
 
     i = 0
-    nrow = 0
-    ncol = 0
 
     for row in xrange(rows):
-        ncol = 0
         for column in xrange(columns):
             image = images[i % len(images)]
-            x = cell_width * column + padding + (ncol * hspace)
-            y = cell_height * row + padding + (nrow * vspace)
+            x = cell_width * column + padding + (column * hspace)
+            y = cell_height * row + padding + (row * vspace)
             if verbose:
                 print "Enganxant a (%d, %d)" % (x, y)
             canvas.paste(image, (x, y, ))
             i += 1
-            ncol += 1
-        nrow += 1
 
     if verbose:
         print "Desant", output_file
