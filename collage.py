@@ -3,7 +3,8 @@
 u"""
 
 """
-from argparse import ArgumentParser
+import argparse
+import textwrap
 from glob import glob
 from decimal import Decimal
 import os
@@ -184,7 +185,9 @@ def thumbnail(
     return image
 
 def main():
-    parser = ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class = argparse.RawTextHelpFormatter,
+    )
 
     parser.add_argument(
         "--width", type = Decimal, default = DEFAULT_WIDTH,
