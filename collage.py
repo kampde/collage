@@ -45,6 +45,9 @@ def collage(
     vspace_px = pixels(vspace)
     padding_px = pixels(padding)
 
+    if verbose:
+        print "Mida de la imatge: %d x %d" % (width_px, height_px)
+
     # Calculate cell size
     cell_width_px = (width_px - padding_px * 2 - (columns - 1) * hspace_px) / columns
     cell_height_px = (height_px - padding_px * 2 - (rows - 1) * vspace_px) / rows
