@@ -49,7 +49,7 @@ def collage(
     images = []
     for image_file in image_files:
         if verbose:
-            print "Redimensionant", image_file
+            print "Redimensionant %s a %dx%d" % (image_file, cell_width, cell_height)
         thumb = thumbnail(
             image_file,
             cell_width,
